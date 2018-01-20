@@ -2,14 +2,16 @@
   "name": "happybyt",
   "version": "0.0.1",
   "description": "A Social Network for Food Lovers",
-  "main": "dist/server.js",
-  "scripts": {
-    "test": "test"
-  },
+  "author": "Pubudu Dodangoda",
+  "license": "GPL-3.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/pupudu/happybyt.git"
   },
+  "bugs": {
+    "url": "https://github.com/pupudu/happybyt/issues"
+  },
+  "homepage": "https://github.com/pupudu/happybyt#readme",
   "keywords": [
     "food",
     "tasty",
@@ -19,10 +21,158 @@
     "recipie",
     "restaurants"
   ],
-  "author": "Pubudu Dodangoda",
-  "license": "GPL-3.0",
-  "bugs": {
-    "url": "https://github.com/pupudu/happybyt/issues"
+  "main": "dist/server.js",
+  "scripts": {
+    "install-deps": "yarn",
+    "quick-start:local": "NODE_ENV='local' node dist/server.js",
+    "quick-start:prod": "NODE_ENV='production' node dist/server.js",
+    "quick-start:dev": "NODE_ENV='development' node dist/server.js",
+    "start": "npm run start-local",
+    "start-local": "npm run build && npm run quick-start:local",
+    "start-dev": "npm run build && npm run quick-start:dev",
+    "start-prod": "npm run build && npm run quick-start:prod",
+    "start:watch": "npm-watch express | npm run react-start",
+    "build:dev": "npm run clean && npm run install-deps && npm run react-build && gulp dev",
+    "build": "npm run install-deps && npm run react-build && npm run clean && gulp prod",
+    "build:watch": "npm-watch express:build | npm-watch webapp:build",
+    "express:build": "npm run install-deps gulp babel-source-maps",
+    "express:build:watch": "npm-watch express:build",
+    "express": "npm run express:build && npm run quick-start",
+    "express:watch": "npm-watch express",
+    "express:test:unit": "npm run install-deps NODE_ENV='test' mocha 'src/app/**/*.test.js' --compilers js:babel-core/register --reporter spec  --timeout 10000 --recursive",
+    "express:test:integration": "npm run install-deps NODE_ENV='test' mocha 'test/**/*.test.js' --compilers js:babel-core/register --reporter spec  --timeout 10000 --recursive",
+    "express:test": "npm run express:test:unit && npm run express:test:integration",
+    "react-build": "gulp sass && npm run react-install && cd src/web-app && npm run build",
+    "react-start": "gulp sass && npm run react-install && cd src/web-app && npm start",
+    "react-install": "cd src/web-app && npm run install-deps",
+    "react-add": "cd src/web-app && yarn add",
+    "webapp:clean": "rm -rf dist/web-app && mkdir dist/web-app",
+    "webapp:clone": "cp -r src/web-app/build/* dist/web-app",
+    "webapp:build": "npm run react-build && npm run webapp:clean && npm run webapp:clone",
+    "webapp": "npm run webapp:build && npm run quick-start",
+    "webapp:watch": "npm-watch webapp",
+    "webapp:test:ci": "cd src/web-app && npm run install-deps npm run test:once",
+    "webapp:test:e2e": "cd src/web-app && npm run install-deps npm run test:e2e",
+    "webapp:test:ci:e2e": "cd src/web-app && npm run install-deps npm run test:ci:e2e",
+    "webapp:test": "npm run webapp:test:ci",
+    "eslint": "eslint 'src/**/*.js' 'test/**/*.js'",
+    "eslint-fix": "eslint 'src/**/*.js' --fix",
+    "lint-staged": "lint-staged",
+    "git-uncommited-changes": "git diff --quiet --cached",
+    "git-unstaged-changes": "git diff --quiet",
+    "git-branch": "bash git-hooks/branch.sh",
+    "esdoc": "esdoc",
+    "clean": "rm -rf dist/",
+    "clean-modules": "rm -rf node_modules/ && cd src/web-app/ && rm -rf node_modules/",
+    "deep-clean": "npm run clean && npm run clean-modules",
+    "test": "npm run express:test && npm run webapp:test"
   },
-  "homepage": "https://github.com/pupudu/happybyt#readme"
+  "watch": {
+    "express": {
+      "patterns": [
+        "src/app/**/*",
+        "src/utils/**/*",
+        "src/app.js",
+        "src/daemon.js",
+        "src/server.js"
+      ],
+      "extensions": "js",
+      "quiet": true
+    },
+    "express:build": {
+      "patterns": [
+        "src/app/**/*",
+        "src/utils/**/*",
+        "src/app.js",
+        "src/daemon.js",
+        "src/server.js"
+      ],
+      "extensions": "js",
+      "quiet": true
+    },
+    "webapp": {
+      "patterns": [
+        "src/web-app/src/**/*"
+      ],
+      "extensions": "js",
+      "quiet": true
+    },
+    "webapp:build": {
+      "patterns": [
+        "src/web-app/src/**/*"
+      ],
+      "extensions": "js",
+      "quiet": true
+    },
+    "quick-start": {
+      "patterns": [
+        "dist/**/*"
+      ],
+      "extensions": "js",
+      "quiet": true
+    }
+  },
+  "dependencies": {
+    "bcrypt": "^1.0.2",
+    "body-parser": "~1.16.0",
+    "bunyan": "^1.8.12",
+    "bunyan-format": "^0.2.1",
+    "compression": "^1.6.2",
+    "express": "~4.14.1",
+    "express-session": "^1.15.3",
+    "mocha": "^3.2.0",
+    "mongoose": "4.10",
+    "passport": "^0.3.2",
+    "passport-local": "^1.0.0",
+    "session-file-store": "^1.0.0",
+    "socket.io": "^1.7.3",
+    "socket.io-client": "^1.7.3",
+    "unirest": "^0.5.1"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-plugin-transform-object-rest-spread": "^6.23.0",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-minify": "^0.2.0",
+    "chai": "^4.1.2",
+    "esdoc": "^0.5.2",
+    "eslint": "^3.19.0",
+    "eslint-plugin-jest": "^20.0.1",
+    "eslint-plugin-prefer-object-spread": "^1.2.1",
+    "eslint-plugin-react": "^6.10.3",
+    "gulp": "^3.9.1",
+    "gulp-babel": "^7.0.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-sass": "^3.1.0",
+    "gulp-sourcemaps": "^2.4.1",
+    "lint-staged": "^3.3.1",
+    "npm-watch": "^0.1.9",
+    "pre-commit": "^1.2.2",
+    "pre-push": "^0.1.1",
+    "pump": "latest",
+    "sinon": "^4.1.2",
+    "source-map-support": "latest",
+    "supertest": "^3.0.0"
+  },
+  "pre-push": [
+    "eslint",
+    "test",
+    "git-unstaged-changes",
+    "git-uncommited-changes",
+    "git-branch"
+  ],
+  "pre-commit": [
+    "git-branch",
+    "lint-staged"
+  ],
+  "lint-staged": {
+    "src/**/*.js": [
+      "eslint --fix",
+      "git add"
+    ],
+    "test/**/*.js": [
+      "eslint --fix",
+      "git add"
+    ]
+  }
 }
