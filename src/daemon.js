@@ -32,16 +32,13 @@ class Daemon {
      * @returns {Promise} - task success
      */
     initSyncServices() {
-        return new Promise((resolve, reject) => {
-            this.modifyErrorPrototype()
-                .then(this.enableSourceMaps)
-                .then(this.initMongoDb)
-                .then(resolve)
-                .catch((err) => {
-                    err.appendDetails("Daemon", "initSyncServices", "Failed while initializing some service");
-                    return reject(err);
-                });
-        });
+        return this.modifyErrorPrototype()
+            .then(this.enableSourceMaps)
+            .then(this.initMongoDb)
+            .catch((err) => {
+                err.appendDetails("Daemon", "initSyncServices", "Failed while initializing some service");
+                throw err;
+            });
     }
 
     /**
@@ -56,13 +53,10 @@ class Daemon {
      * @returns {Promise} - promise
      */
     enableSourceMaps() {
-        return new Promise((resolve) => {
-            if (SOURCE_MAPS_SUPPORT) {
-                sourceMaps.install();
-                return resolve();
-            }
-            return resolve();
-        });
+        if (SOURCE_MAPS_SUPPORT) {
+            sourceMaps.install();
+        }
+        return Promise.resolve();
     }
 
     /**
@@ -92,17 +86,14 @@ class Daemon {
      * @returns {Promise} - success message
      */
     initMongoDb() {
-        return new Promise((resolve, reject) => {
-            MongoDbManager.init()
-                .then((message) => {
-                    logger.info(message);
-                })
-                .then(resolve)
-                .catch((err) => {
-                    err.appendDetails("Daemon", "initMongoDB");
-                    return reject(err);
-                });
-        });
+        return MongoDbManager.init()
+            .then((message) => {
+                logger.info(message);
+            })
+            .catch((err) => {
+                err.appendDetails("Daemon", "initMongoDB");
+                throw err;
+            });
     }
 
 }
