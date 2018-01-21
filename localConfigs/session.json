@@ -1,0 +1,18 @@
+{
+  "EXPRESS": {
+    "resave": false,
+    "saveUninitialized": false,
+    "cookie": {
+      "secure": true,
+      "httpOnly": false
+    },
+    "secret": "happyByte",
+    "name": "connect.sid.happy_byte"
+  },
+  "STORE": {
+    "path": "./session-store/",
+    "useAsync": true,
+    "reapInterval": 5000,
+    "maxAge": 10000
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "PLATFORM_NAME": "local",
+  "PORT": 8085,
+  "SOURCE_MAPS_SUPPORT": true,
+  "EXTERNAL_API_TIMEOUT": 30000,
+  "SIGNUP_SECRET": "mangekyu_sharingan"
+}

@@ -1,0 +1,7 @@
+{
+  "HOST": "localhost",
+  "PORT": "27017",
+  "DB": "happybyte",
+  "USERNAME": null,
+  "PASSWORD": null
+}
